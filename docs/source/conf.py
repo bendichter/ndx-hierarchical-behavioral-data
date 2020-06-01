@@ -96,7 +96,7 @@ def run_doc_autogen(_):
 
     if spec_doc_rebuild_always or not os.path.exists(spec_output_dir):
         sys.path.append('./docs')  # needed to enable import of generate_format docs
-        from hdmf_docutils.generate_format_docs import main as generate_docs
+        from nwb_docutils.generate_format_docs import main as generate_docs
         generate_docs()
 
 
