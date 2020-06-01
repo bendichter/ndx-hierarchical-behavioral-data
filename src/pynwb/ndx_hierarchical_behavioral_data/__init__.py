@@ -1,11 +1,13 @@
 import os
-from pynwb import load_namespaces, get_class
+from pynwb import load_namespaces
+
+name = 'ndx-hierarchical-behavioral-data'
 
 # Set path of the namespace.yaml file to the expected install location
 ndx_hierarchical_behavioral_data_specpath = os.path.join(
     os.path.dirname(__file__),
     'spec',
-    'ndx-hierarchical-behavioral-data.namespace.yaml'
+    name + '.namespace.yaml'
 )
 
 # If the extension has not been installed yet but we are running directly from
@@ -15,12 +17,10 @@ if not os.path.exists(ndx_hierarchical_behavioral_data_specpath):
         os.path.dirname(__file__),
         '..', '..', '..',
         'spec',
-        'ndx-hierarchical-behavioral-data.namespace.yaml'
+        name + '.namespace.yaml'
     ))
 
 # Load the namespace
 load_namespaces(ndx_hierarchical_behavioral_data_specpath)
 
-# TODO: import your classes here or define your class using get_class to make
-# them accessible at the package level
-TetrodeSeries = get_class('TetrodeSeries', 'ndx-hierarchical-behavioral-data')
+from .hierarchical_behavioral_data import HierarchicalDynamicTable
