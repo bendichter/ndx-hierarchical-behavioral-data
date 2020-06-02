@@ -23,4 +23,4 @@ if not os.path.exists(ndx_hierarchical_behavioral_data_specpath):
 # Load the namespace
 load_namespaces(ndx_hierarchical_behavioral_data_specpath)
 
-from .hierarchical_behavioral_data import HierarchicalDynamicTable
+from .hierarchical_behavioral_data import SentencesTable, WordsTable, SyllablesTable, PhonemesTable, TranscriptionTable

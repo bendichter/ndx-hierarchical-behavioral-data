@@ -1,1 +1,0 @@
-from ndx_icephys_meta.icephys import HierarchicalDynamicTableMixin
