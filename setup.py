@@ -22,7 +22,7 @@ setup_args = {
     'long_description': long_description,
     'long_description_content_type': "text/markdown",
     'install_requires': [
-        'pynwb>=1.1.2'
+        'pynwb>=1.1.2', 'ndx-icephys-meta'
     ],
     'packages': find_packages('src/pynwb'),
     'package_dir': {'': 'src/pynwb'},

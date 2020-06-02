@@ -2,3 +2,4 @@ hdmf
 numpy
 pynwb>=1.1.2
 hdmf_docutils
+ndx-icephys-meta
