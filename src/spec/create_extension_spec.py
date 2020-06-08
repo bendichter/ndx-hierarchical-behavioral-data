@@ -6,7 +6,8 @@ from pynwb.spec import (
     NWBNamespaceBuilder,
     export_spec,
     NWBGroupSpec,
-    NWBAttributeSpec
+    NWBAttributeSpec,
+    NWBDatasetSpec
 )
 
 
@@ -31,37 +32,110 @@ def main():
     for type_name in include_core_types:
         ns_builder.include_type(type_name, namespace='core')
 
-    # Create a generic compound datatype
-
-    sentences_table_spec = NWBGroupSpec(
-        name='sentences',
-        neurodata_type_def='SentencesTable',
-        neurodata_type_inc='DynamicTable',
-        doc='A table for sentences'
-    )
-    words_table_spec = NWBGroupSpec(
-        name='words',
-        neurodata_type_def='WordsTable',
-        neurodata_type_inc='DynamicTable',
-        doc='A table for words'
-    )
-    syllables_table_spec = NWBGroupSpec(
-        name='syllables',
-        neurodata_type_def='SyllablesTable',
-        neurodata_type_inc='DynamicTable',
-        doc='A table for syllables'
-    )
-    phonemes_table_spec = NWBGroupSpec(
-        name='phonemes',
-        neurodata_type_def='PhonemesTable',
-        neurodata_type_inc='DynamicTable',
-        doc='A table for phonemes'
-    )
+    # Create a collection of dynamic tables
     transcription_table_spec = NWBGroupSpec(
         name='transcription',
         neurodata_type_def='TranscriptionTable',
         neurodata_type_inc='DynamicTable',
-        doc='A table for transcription'
+        doc='DynamicTable container that supports storing a collection of sub-tables. Each sub-table is a '
+            'DynamicTable itself. This type effectively defines a 2-level table in which the main data is stored in '
+            'the main table implemented by this type and additional columns of the table are grouped into categories, '
+            'with each category being represented by a separate DynamicTable stored within the group.',
+        attributes=[NWBAttributeSpec(name='categories',
+                                     dtype='text',
+                                     dims=['num_categories'],
+                                     doc='The names of the categories in this TranscriptionTable. Each '
+                                         'category is represented by one DynamicTable stored in the parent group.'
+                                         'This attribute should be used to specify an order of categories.',
+                                     shape=[None])
+                    ],
+        groups=[NWBGroupSpec(neurodata_type_inc='DynamicTable',
+                             doc='A DynamicTable representing a particular category for columns in the '
+                                 'TranscriptionTable parent container. The name of the category is given by '
+                                 'the name of the DynamicTable and its description by the description attribute '
+                                 'of the DynamicTable.',
+                             quantity='*')
+                ]
+    )
+
+    # Create our table to store sentences
+    sentences_table_spec = NWBGroupSpec(
+        name='sentences',
+        neurodata_type_def='SentencesTable',
+        neurodata_type_inc='DynamicTable',
+        doc='A table to store sentences. Each row in the table represents a single sentence consisting of words.',
+        datasets=[NWBDatasetSpec(name='label',
+                                 neurodata_type_inc='DynamicTableRegion',
+                                 doc='each row in this DynamicTableRegion is a sentence',
+                                 dims=('num_sentences',),
+                                 shape=(None,),
+                                 dtype='text'
+                                 ),
+                  NWBDatasetSpec(name='words',
+                                 neurodata_type_inc='DynamicTableRegion',
+                                 doc='each row in this DynamicTableRegion is a link to the words',
+                                 dims=('num_sentences',),
+                                 shape=(None,),
+                                 dtype='list'
+                                 )
+                  ]
+    )
+
+    # Create our table to store words
+    words_table_spec = NWBGroupSpec(
+        name='words',
+        neurodata_type_def='WordsTable',
+        neurodata_type_inc='DynamicTable',
+        doc='A table for words',
+        datasets=[NWBDatasetSpec(name='label',
+                                 neurodata_type_inc='DynamicTableRegion',
+                                 doc='each row in this DynamicTableRegion is a word',
+                                 dims=('num_words',),
+                                 shape=(None,),
+                                 dtype='text'),
+                  NWBDatasetSpec(name='syllables',
+                                 neurodata_type_inc='DynamicTableRegion',
+                                 doc='each row in this DynamicTableRegion is a link to the syllables',
+                                 dims=('num_words',),
+                                 shape=(None,),
+                                 dtype='list')
+                  ]
+    )
+
+    # Create our table to store syllables
+    syllables_table_spec = NWBGroupSpec(
+        name='syllables',
+        neurodata_type_def='SyllablesTable',
+        neurodata_type_inc='DynamicTable',
+        doc='A table for syllables',
+        datasets=[NWBDatasetSpec(name='label',
+                                 neurodata_type_inc='DynamicTableRegion',
+                                 doc='each row in this DynamicTableRegion is a syllables',
+                                 dims=('num_syllables',),
+                                 shape=(None,),
+                                 dtype='text'),
+                  NWBDatasetSpec(name='phonemes',
+                                 neurodata_type_inc='DynamicTableRegion',
+                                 doc='each row in this DynamicTableRegion is a link to the phonemes',
+                                 dims=('num_syllables',),
+                                 shape=(None,),
+                                 dtype='list')
+                  ]
+    )
+
+    # Create our table to store phonemes
+    phonemes_table_spec = NWBGroupSpec(
+        name='phonemes',
+        neurodata_type_def='PhonemesTable',
+        neurodata_type_inc='DynamicTable',
+        doc='A table for phonemes',
+        datasets=[NWBDatasetSpec(name='label',
+                                 neurodata_type_inc='DynamicTableRegion',
+                                 doc='each row in this DynamicTableRegion is a phonemes',
+                                 dims=('num_phonemes',),
+                                 shape=(None,),
+                                 dtype='text')
+                  ]
     )
 
     # Add all of our new data types to this list
