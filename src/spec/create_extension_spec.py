@@ -7,7 +7,8 @@ from pynwb.spec import (
     export_spec,
     NWBGroupSpec,
     NWBAttributeSpec,
-    NWBDatasetSpec
+    NWBDatasetSpec,
+    NWBRefSpec
 )
 
 
@@ -61,28 +62,57 @@ def main():
                 ]
     )
 
-    # Create our table to store sentences
-    sentences_table_spec = NWBGroupSpec(
-        name='sentences',
-        neurodata_type_def='SentencesTable',
+    # Create our table to store phonemes
+    phonemes_table_spec = NWBGroupSpec(
+        name='phonemes',
+        neurodata_type_def='PhonemesTable',
         neurodata_type_inc='DynamicTable',
-        doc='A table to store different sentences.',
+        doc='A table to store different phonemes',
         attributes=[NWBAttributeSpec(name='description',
                                      dtype='text',
                                      doc='Description of what is in this dynamic table.',
-                                     value='Table for storing sentence related data')],
+                                     value='Table for storing phonemes related data')],
         datasets=[NWBDatasetSpec(name='label',
                                  neurodata_type_inc='DynamicTableRegion',
-                                 doc='Column for storing sentences. Each row in this DynamicTableRegion is a sentence '
-                                     'consisting of words.',
-                                 dims=('num_sentences',),
+                                 doc='Column for storing phonemes. Each row in this DynamicTableRegion is a phoneme.',
+                                 dims=('num_phonemes',),
+                                 shape=(None,),
+                                 dtype='text')
+                  ]
+    )
+
+    # Create our table to store syllables
+    syllables_table_spec = NWBGroupSpec(
+        name='syllables',
+        neurodata_type_def='SyllablesTable',
+        neurodata_type_inc='DynamicTable',
+        doc='A table to store different syllables',
+        attributes=[NWBAttributeSpec(name='description',
+                                     dtype='text',
+                                     doc='Description of what is in this dynamic table.',
+                                     value='Table for storing syllables related data')],
+        datasets=[NWBDatasetSpec(name='label',
+                                 neurodata_type_inc='DynamicTableRegion',
+                                 doc='Column for storing syllables. Each row in this DynamicTableRegion is a syllable '
+                                     'consisting of phonemes.',
+                                 attributes=[
+                                     NWBAttributeSpec(
+                                         name='table',
+                                         dtype=NWBRefSpec(target_type='PhonemesTable',
+                                                          reftype='object'),
+                                         doc='Reference to the PhonemesTable table that '
+                                             'this table region applies to. This specializes the '
+                                             'attribute inherited from DynamicTableRegion to fix '
+                                             'the type of table that can be referenced here.'
+                                     )],
+                                 dims=('num_syllables',),
                                  shape=(None,),
                                  dtype='text'
                                  ),
-                  NWBDatasetSpec(name='words',
+                  NWBDatasetSpec(name='phonemes',
                                  neurodata_type_inc='VectorIndex',
-                                 doc='Column for storing a link to the constituting words (rows)',
-                                 dims=('num_sentences',),
+                                 doc='Column for storing a link to the constituting phonemes (rows)',
+                                 dims=('num_syllables',),
                                  shape=(None,),
                                  dtype='list'
                                  )
@@ -103,6 +133,16 @@ def main():
                                  neurodata_type_inc='DynamicTableRegion',
                                  doc='Column for storing words. Each row in this DynamicTableRegion is a word '
                                      'consisting of syllables.',
+                                 attributes=[
+                                     NWBAttributeSpec(
+                                         name='table',
+                                         dtype=NWBRefSpec(target_type='SyllablesTable',
+                                                          reftype='object'),
+                                         doc='Reference to the SyllablesTable table that '
+                                             'this table region applies to. This specializes the '
+                                             'attribute inherited from DynamicTableRegion to fix '
+                                             'the type of table that can be referenced here.'
+                                     )],
                                  dims=('num_words',),
                                  shape=(None,),
                                  dtype='text'
@@ -117,50 +157,41 @@ def main():
                   ]
     )
 
-    # Create our table to store syllables
-    syllables_table_spec = NWBGroupSpec(
-        name='syllables',
-        neurodata_type_def='SyllablesTable',
+    # Create our table to store sentences
+    sentences_table_spec = NWBGroupSpec(
+        name='sentences',
+        neurodata_type_def='SentencesTable',
         neurodata_type_inc='DynamicTable',
-        doc='A table to store different syllables',
+        doc='A table to store different sentences.',
         attributes=[NWBAttributeSpec(name='description',
                                      dtype='text',
                                      doc='Description of what is in this dynamic table.',
-                                     value='Table for storing syllables related data')],
+                                     value='Table for storing sentence related data')],
         datasets=[NWBDatasetSpec(name='label',
                                  neurodata_type_inc='DynamicTableRegion',
-                                 doc='Column for storing syllables. Each row in this DynamicTableRegion is a syllable '
-                                     'consisting of phonemes.',
-                                 dims=('num_syllables',),
+                                 doc='Column for storing sentences. Each row in this DynamicTableRegion is a sentence '
+                                     'consisting of words.',
+                                 attributes=[
+                                     NWBAttributeSpec(
+                                         name='table',
+                                         dtype=NWBRefSpec(target_type='WordsTable',
+                                                          reftype='object'),
+                                         doc='Reference to the WordsTable table that '
+                                             'this table region applies to. This specializes the '
+                                             'attribute inherited from DynamicTableRegion to fix '
+                                             'the type of table that can be referenced here.'
+                                     )],
+                                 dims=('num_sentences',),
                                  shape=(None,),
                                  dtype='text'
                                  ),
-                  NWBDatasetSpec(name='phonemes',
+                  NWBDatasetSpec(name='words',
                                  neurodata_type_inc='VectorIndex',
-                                 doc='Column for storing a link to the constituting phonemes (rows)',
-                                 dims=('num_syllables',),
+                                 doc='Column for storing a link to the constituting words (rows)',
+                                 dims=('num_sentences',),
                                  shape=(None,),
                                  dtype='list'
                                  )
-                  ]
-    )
-
-    # Create our table to store phonemes
-    phonemes_table_spec = NWBGroupSpec(
-        name='phonemes',
-        neurodata_type_def='PhonemesTable',
-        neurodata_type_inc='DynamicTable',
-        doc='A table to store different phonemes',
-        attributes=[NWBAttributeSpec(name='description',
-                                     dtype='text',
-                                     doc='Description of what is in this dynamic table.',
-                                     value='Table for storing phonemes related data')],
-        datasets=[NWBDatasetSpec(name='label',
-                                 neurodata_type_inc='DynamicTableRegion',
-                                 doc='Column for storing phonemes. Each row in this DynamicTableRegion is a phoneme.',
-                                 dims=('num_phonemes',),
-                                 shape=(None,),
-                                 dtype='text')
                   ]
     )
 
