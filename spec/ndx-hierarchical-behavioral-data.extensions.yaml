@@ -1,8 +1,149 @@
 groups:
-- neurodata_type_def: TetrodeSeries
-  neurodata_type_inc: ElectricalSeries
-  doc: An extension of ElectricalSeries to include the tetrode ID for each time series.
+- neurodata_type_def: SentencesTable
+  neurodata_type_inc: DynamicTable
+  name: sentences
+  doc: A table to store different sentences.
   attributes:
-  - name: trode_id
-    dtype: int32
-    doc: The tetrode ID.
+  - name: description
+    dtype: text
+    value: Table for storing sentence related data
+    doc: Description of what is in this dynamic table.
+  datasets:
+  - name: label
+    neurodata_type_inc: DynamicTableRegion
+    dtype: text
+    dims:
+    - num_sentences
+    shape:
+    - null
+    doc: Column for storing sentences. Each row in this DynamicTableRegion is a sentence
+      consisting of words.
+    attributes:
+    - name: table
+      dtype:
+        target_type: WordsTable
+        reftype: object
+      doc: Reference to the WordsTable table that this table region applies to. This
+        specializes the attribute inherited from DynamicTableRegion to fix the type
+        of table that can be referenced here.
+  - name: words_index
+    neurodata_type_inc: VectorIndex
+    dims:
+    - num_sentences
+    shape:
+    - null
+    doc: Column for storing a link to the constituting words (rows)
+- neurodata_type_def: WordsTable
+  neurodata_type_inc: DynamicTable
+  name: words
+  doc: A table to store different words
+  attributes:
+  - name: description
+    dtype: text
+    value: Table for storing word related data
+    doc: Description of what is in this dynamic table.
+  datasets:
+  - name: label
+    neurodata_type_inc: DynamicTableRegion
+    dtype: text
+    dims:
+    - num_words
+    shape:
+    - null
+    doc: Column for storing words. Each row in this DynamicTableRegion is a word consisting
+      of syllables.
+    attributes:
+    - name: table
+      dtype:
+        target_type: SyllablesTable
+        reftype: object
+      doc: Reference to the SyllablesTable table that this table region applies to.
+        This specializes the attribute inherited from DynamicTableRegion to fix the
+        type of table that can be referenced here.
+  - name: syllables_index
+    neurodata_type_inc: VectorIndex
+    dims:
+    - num_words
+    shape:
+    - null
+    doc: Column for storing a link to the constituting syllables (rows)
+- neurodata_type_def: SyllablesTable
+  neurodata_type_inc: DynamicTable
+  name: syllables
+  doc: A table to store different syllables
+  attributes:
+  - name: description
+    dtype: text
+    value: Table for storing syllables related data
+    doc: Description of what is in this dynamic table.
+  datasets:
+  - name: label
+    neurodata_type_inc: DynamicTableRegion
+    dtype: text
+    dims:
+    - num_syllables
+    shape:
+    - null
+    doc: Column for storing syllables. Each row in this DynamicTableRegion is a syllable
+      consisting of phonemes.
+    attributes:
+    - name: table
+      dtype:
+        target_type: PhonemesTable
+        reftype: object
+      doc: Reference to the PhonemesTable table that this table region applies to.
+        This specializes the attribute inherited from DynamicTableRegion to fix the
+        type of table that can be referenced here.
+  - name: phonemes_index
+    neurodata_type_inc: VectorIndex
+    dims:
+    - num_syllables
+    shape:
+    - null
+    doc: Column for storing a link to the constituting phonemes (rows)
+- neurodata_type_def: PhonemesTable
+  neurodata_type_inc: DynamicTable
+  name: phonemes
+  doc: A table to store different phonemes
+  attributes:
+  - name: description
+    dtype: text
+    value: Table for storing phonemes related data
+    doc: Description of what is in this dynamic table.
+  datasets:
+  - name: label
+    neurodata_type_inc: DynamicTableRegion
+    dtype: text
+    dims:
+    - num_phonemes
+    shape:
+    - null
+    doc: Column for storing phonemes. Each row in this DynamicTableRegion is a phoneme.
+- neurodata_type_def: TranscriptionTable
+  neurodata_type_inc: DynamicTable
+  name: transcription
+  doc: 'DynamicTable container that supports storing a collection of sub-tables. Each
+    sub-table is a DynamicTable itself. This type effectively defines a 2-level table
+    in which the main data is stored in the main table implemented by this type and
+    additional columns of the table are grouped into categories, with each category
+    being represented by a separate DynamicTable stored within the group.This table
+    is intended to group together a sentence, with its constituting words, syllables,
+    and phonemes Each row in the table represents a single sentence consisting typically
+    of a number of words, and each word is made of a few syllables, and it is also
+    consisting of phonemes. '
+  attributes:
+  - name: categories
+    dtype: text
+    dims:
+    - num_categories
+    shape:
+    - null
+    doc: The names of the categories in this TranscriptionTable. Each category is
+      represented by one DynamicTable stored in the parent group.This attribute should
+      be used to specify an order of categories.
+  groups:
+  - neurodata_type_inc: DynamicTable
+    doc: A DynamicTable representing a particular category for columns in the TranscriptionTable
+      parent container. The name of the category is given by the name of the DynamicTable
+      and its description by the description attribute of the DynamicTable.
+    quantity: '*'
