@@ -23,12 +23,9 @@ def main():
     )
 
     # Add the type we want to include from core to this list
-    include_core_types = ['Container',
-                          'DynamicTable',
+    include_core_types = ['DynamicTable',
                           'DynamicTableRegion',
-                          'VectorData',
-                          'VectorIndex',
-                          'NWBFile']
+                          'VectorIndex']
     # Include the types that are used by the extension and their namespaces (where to find them)
     for type_name in include_core_types:
         ns_builder.include_type(type_name, namespace='core')
@@ -109,12 +106,11 @@ def main():
                                  shape=(None,),
                                  dtype='text'
                                  ),
-                  NWBDatasetSpec(name='phonemes',
+                  NWBDatasetSpec(name='phonemes_index',
                                  neurodata_type_inc='VectorIndex',
                                  doc='Column for storing a link to the constituting phonemes (rows)',
                                  dims=('num_syllables',),
-                                 shape=(None,),
-                                 dtype='list'
+                                 shape=(None,)
                                  )
                   ]
     )
@@ -147,12 +143,11 @@ def main():
                                  shape=(None,),
                                  dtype='text'
                                  ),
-                  NWBDatasetSpec(name='syllables',
+                  NWBDatasetSpec(name='syllables_index',
                                  neurodata_type_inc='VectorIndex',
                                  doc='Column for storing a link to the constituting syllables (rows)',
                                  dims=('num_words',),
-                                 shape=(None,),
-                                 dtype='list'
+                                 shape=(None,)
                                  )
                   ]
     )
@@ -185,12 +180,11 @@ def main():
                                  shape=(None,),
                                  dtype='text'
                                  ),
-                  NWBDatasetSpec(name='words',
+                  NWBDatasetSpec(name='words_index',
                                  neurodata_type_inc='VectorIndex',
                                  doc='Column for storing a link to the constituting words (rows)',
                                  dims=('num_sentences',),
-                                 shape=(None,),
-                                 dtype='list'
+                                 shape=(None,)
                                  )
                   ]
     )
