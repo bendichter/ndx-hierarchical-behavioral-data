@@ -2,7 +2,7 @@ groups:
 - neurodata_type_def: SentencesTable
   neurodata_type_inc: DynamicTable
   name: sentences
-  doc: A table to store different sentences.
+  doc: A table to store different sentences
   attributes:
   - name: description
     dtype: text
@@ -122,15 +122,14 @@ groups:
 - neurodata_type_def: TranscriptionTable
   neurodata_type_inc: DynamicTable
   name: transcription
-  doc: 'DynamicTable container that supports storing a collection of sub-tables. Each
-    sub-table is a DynamicTable itself. This type effectively defines a 2-level table
-    in which the main data is stored in the main table implemented by this type and
-    additional columns of the table are grouped into categories, with each category
-    being represented by a separate DynamicTable stored within the group.This table
-    is intended to group together a sentence, with its constituting words, syllables,
-    and phonemes Each row in the table represents a single sentence consisting typically
-    of a number of words, and each word is made of a few syllables, and it is also
-    consisting of phonemes. '
+  doc: 'This DynamicTable is intended to group together a collection of sub-tables.
+    Each sub-table is a DynamicTable itself. This type effectively defines a 2-level
+    table in which the main data is stored in the main table implemented by this type
+    and additional columns of the table are grouped into categories, with each category
+    being represented by a separate DynamicTable stored within the group.Here, sub-tables
+    are: sentence table which stores different sentences; words table which stores
+    constituting words; syllables table for storing syllables of each word; and phonemes
+    table for storing consisting of phonemes.'
   attributes:
   - name: categories
     dtype: text

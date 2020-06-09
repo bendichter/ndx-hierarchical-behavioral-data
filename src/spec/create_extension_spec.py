@@ -30,35 +30,6 @@ def main():
     for type_name in include_core_types:
         ns_builder.include_type(type_name, namespace='core')
 
-    # Create a collection of dynamic tables
-    transcription_table_spec = NWBGroupSpec(
-        name='transcription',
-        neurodata_type_def='TranscriptionTable',
-        neurodata_type_inc='DynamicTable',
-        doc='DynamicTable container that supports storing a collection of sub-tables. Each sub-table is a '
-            'DynamicTable itself. This type effectively defines a 2-level table in which the main data is stored in '
-            'the main table implemented by this type and additional columns of the table are grouped into categories, '
-            'with each category being represented by a separate DynamicTable stored within the group.'
-            'This table is intended to group together a sentence, with its constituting words, syllables, and phonemes '
-            'Each row in the table represents a single sentence consisting typically of a number of words, and '
-            'each word is made of a few syllables, and it is also consisting of phonemes. ',
-        attributes=[NWBAttributeSpec(name='categories',
-                                     dtype='text',
-                                     dims=['num_categories'],
-                                     doc='The names of the categories in this TranscriptionTable. Each '
-                                         'category is represented by one DynamicTable stored in the parent group.'
-                                         'This attribute should be used to specify an order of categories.',
-                                     shape=[None])
-                    ],
-        groups=[NWBGroupSpec(neurodata_type_inc='DynamicTable',
-                             doc='A DynamicTable representing a particular category for columns in the '
-                                 'TranscriptionTable parent container. The name of the category is given by '
-                                 'the name of the DynamicTable and its description by the description attribute '
-                                 'of the DynamicTable.',
-                             quantity='*')
-                ]
-    )
-
     # Create our table to store phonemes
     phonemes_table_spec = NWBGroupSpec(
         name='phonemes',
@@ -157,7 +128,7 @@ def main():
         name='sentences',
         neurodata_type_def='SentencesTable',
         neurodata_type_inc='DynamicTable',
-        doc='A table to store different sentences.',
+        doc='A table to store different sentences',
         attributes=[NWBAttributeSpec(name='description',
                                      dtype='text',
                                      doc='Description of what is in this dynamic table.',
@@ -187,6 +158,35 @@ def main():
                                  shape=(None,)
                                  )
                   ]
+    )
+
+    # Create a table to group together all the above groups
+    transcription_table_spec = NWBGroupSpec(
+        name='transcription',
+        neurodata_type_def='TranscriptionTable',
+        neurodata_type_inc='DynamicTable',
+        doc='This DynamicTable is intended to group together a collection of sub-tables. Each sub-table is a '
+            'DynamicTable itself. This type effectively defines a 2-level table in which the main data is stored in '
+            'the main table implemented by this type and additional columns of the table are grouped into categories, '
+            'with each category being represented by a separate DynamicTable stored within the group.'
+            'Here, sub-tables are: sentence table which stores different sentences; words table which stores '
+            'constituting words; syllables table for storing syllables of each word; and phonemes table for storing '
+            'consisting of phonemes.',
+        attributes=[NWBAttributeSpec(name='categories',
+                                     dtype='text',
+                                     dims=['num_categories'],
+                                     doc='The names of the categories in this TranscriptionTable. Each '
+                                         'category is represented by one DynamicTable stored in the parent group.'
+                                         'This attribute should be used to specify an order of categories.',
+                                     shape=[None])
+                    ],
+        groups=[NWBGroupSpec(neurodata_type_inc='DynamicTable',
+                             doc='A DynamicTable representing a particular category for columns in the '
+                                 'TranscriptionTable parent container. The name of the category is given by '
+                                 'the name of the DynamicTable and its description by the description attribute '
+                                 'of the DynamicTable.',
+                             quantity='*')
+                ]
     )
 
     # Add all of our new data types to this list
