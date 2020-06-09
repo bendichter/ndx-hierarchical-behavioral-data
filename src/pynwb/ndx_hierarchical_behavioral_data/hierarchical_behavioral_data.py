@@ -1,6 +1,7 @@
 from ndx_icephys_meta.icephys import HierarchicalDynamicTableMixin
-from pynwb.core import DynamicTable
+from pynwb.core import DynamicTable, DynamicTableRegion, VectorIndex
 from pynwb import register_class
+from hdmf.utils import docval, get_docval
 
 
 @register_class('PhonemesTable', 'ndx-hierarchical-behavioral-data')
@@ -16,6 +17,8 @@ class PhonemesTable(DynamicTable, HierarchicalDynamicTableMixin):
          'table': True},
     )
 
+    @docval(*get_docval(DynamicTable.__init__, 'id', 'columns', 'colnames'))
+
 
 @register_class('SyllablesTable', 'ndx-hierarchical-behavioral-data')
 class SyllablesTable(DynamicTable, HierarchicalDynamicTableMixin):
@@ -29,6 +32,12 @@ class SyllablesTable(DynamicTable, HierarchicalDynamicTableMixin):
          'index': True,
          'table': True},
     )
+
+    @docval({'name': 'phonemes_table',
+             'type': PhonemesTable,
+             'doc': 'the PhonemesTable table that the label column indexes.',
+             'default': None},
+            *get_docval(DynamicTable.__init__, 'id', 'columns', 'colnames'))
 
 
 @register_class('WordsTable', 'ndx-hierarchical-behavioral-data')
@@ -44,6 +53,12 @@ class WordsTable(DynamicTable, HierarchicalDynamicTableMixin):
          'table': True},
     )
 
+    @docval({'name': 'syllables_table',
+             'type': SyllablesTable,
+             'doc': 'the SyllablesTable table that the label column indexes.',
+             'default': None},
+            *get_docval(DynamicTable.__init__, 'id', 'columns', 'colnames'))
+
 
 @register_class('SentencesTable', 'ndx-hierarchical-behavioral-data')
 class SentencesTable(DynamicTable, HierarchicalDynamicTableMixin):
@@ -57,6 +72,12 @@ class SentencesTable(DynamicTable, HierarchicalDynamicTableMixin):
          'index': True,
          'table': True},
     )
+
+    @docval({'name': 'words_table',
+             'type': WordsTable,
+             'doc': 'the WordsTable table that the label column indexes.',
+             'default': None},
+            *get_docval(DynamicTable.__init__, 'id', 'columns', 'colnames'))
 
 
 @register_class('TranscriptionTable', 'ndx-hierarchical-behavioral-data')
