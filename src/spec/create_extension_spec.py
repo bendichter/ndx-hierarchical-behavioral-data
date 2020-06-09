@@ -40,7 +40,10 @@ def main():
         doc='DynamicTable container that supports storing a collection of sub-tables. Each sub-table is a '
             'DynamicTable itself. This type effectively defines a 2-level table in which the main data is stored in '
             'the main table implemented by this type and additional columns of the table are grouped into categories, '
-            'with each category being represented by a separate DynamicTable stored within the group.',
+            'with each category being represented by a separate DynamicTable stored within the group.'
+            'This table is intended to group together a sentence, with its constituting words, syllables, and phonemes '
+            'Each row in the table represents a single sentence consisting typically of a number of words, and '
+            'each word is made of a few syllables, and it is also consisting of phonemes. ',
         attributes=[NWBAttributeSpec(name='categories',
                                      dtype='text',
                                      dims=['num_categories'],
