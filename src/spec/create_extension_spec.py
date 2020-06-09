@@ -66,17 +66,22 @@ def main():
         name='sentences',
         neurodata_type_def='SentencesTable',
         neurodata_type_inc='DynamicTable',
-        doc='A table to store sentences. Each row in the table represents a single sentence consisting of words.',
+        doc='A table to store different sentences.',
+        attributes=[NWBAttributeSpec(name='description',
+                                     dtype='text',
+                                     doc='Description of what is in this dynamic table.',
+                                     value='Table for storing sentence related data')],
         datasets=[NWBDatasetSpec(name='label',
                                  neurodata_type_inc='DynamicTableRegion',
-                                 doc='each row in this DynamicTableRegion is a sentence',
+                                 doc='Column for storing sentences. Each row in this DynamicTableRegion is a sentence '
+                                     'consisting of words.',
                                  dims=('num_sentences',),
                                  shape=(None,),
                                  dtype='text'
                                  ),
                   NWBDatasetSpec(name='words',
-                                 neurodata_type_inc='DynamicTableRegion',
-                                 doc='each row in this DynamicTableRegion is a link to the words',
+                                 neurodata_type_inc='VectorIndex',
+                                 doc='Column for storing a link to the constituting words (rows)',
                                  dims=('num_sentences',),
                                  shape=(None,),
                                  dtype='list'
@@ -89,19 +94,26 @@ def main():
         name='words',
         neurodata_type_def='WordsTable',
         neurodata_type_inc='DynamicTable',
-        doc='A table for words',
+        doc='A table to store different words',
+        attributes=[NWBAttributeSpec(name='description',
+                                     dtype='text',
+                                     doc='Description of what is in this dynamic table.',
+                                     value='Table for storing word related data')],
         datasets=[NWBDatasetSpec(name='label',
                                  neurodata_type_inc='DynamicTableRegion',
-                                 doc='each row in this DynamicTableRegion is a word',
+                                 doc='Column for storing words. Each row in this DynamicTableRegion is a word '
+                                     'consisting of syllables.',
                                  dims=('num_words',),
                                  shape=(None,),
-                                 dtype='text'),
+                                 dtype='text'
+                                 ),
                   NWBDatasetSpec(name='syllables',
-                                 neurodata_type_inc='DynamicTableRegion',
-                                 doc='each row in this DynamicTableRegion is a link to the syllables',
+                                 neurodata_type_inc='VectorIndex',
+                                 doc='Column for storing a link to the constituting syllables (rows)',
                                  dims=('num_words',),
                                  shape=(None,),
-                                 dtype='list')
+                                 dtype='list'
+                                 )
                   ]
     )
 
@@ -110,19 +122,26 @@ def main():
         name='syllables',
         neurodata_type_def='SyllablesTable',
         neurodata_type_inc='DynamicTable',
-        doc='A table for syllables',
+        doc='A table to store different syllables',
+        attributes=[NWBAttributeSpec(name='description',
+                                     dtype='text',
+                                     doc='Description of what is in this dynamic table.',
+                                     value='Table for storing syllables related data')],
         datasets=[NWBDatasetSpec(name='label',
                                  neurodata_type_inc='DynamicTableRegion',
-                                 doc='each row in this DynamicTableRegion is a syllables',
+                                 doc='Column for storing syllables. Each row in this DynamicTableRegion is a syllable '
+                                     'consisting of phonemes.',
                                  dims=('num_syllables',),
                                  shape=(None,),
-                                 dtype='text'),
+                                 dtype='text'
+                                 ),
                   NWBDatasetSpec(name='phonemes',
-                                 neurodata_type_inc='DynamicTableRegion',
-                                 doc='each row in this DynamicTableRegion is a link to the phonemes',
+                                 neurodata_type_inc='VectorIndex',
+                                 doc='Column for storing a link to the constituting phonemes (rows)',
                                  dims=('num_syllables',),
                                  shape=(None,),
-                                 dtype='list')
+                                 dtype='list'
+                                 )
                   ]
     )
 
@@ -131,10 +150,14 @@ def main():
         name='phonemes',
         neurodata_type_def='PhonemesTable',
         neurodata_type_inc='DynamicTable',
-        doc='A table for phonemes',
+        doc='A table to store different phonemes',
+        attributes=[NWBAttributeSpec(name='description',
+                                     dtype='text',
+                                     doc='Description of what is in this dynamic table.',
+                                     value='Table for storing phonemes related data')],
         datasets=[NWBDatasetSpec(name='label',
                                  neurodata_type_inc='DynamicTableRegion',
-                                 doc='each row in this DynamicTableRegion is a phonemes',
+                                 doc='Column for storing phonemes. Each row in this DynamicTableRegion is a phoneme.',
                                  dims=('num_phonemes',),
                                  shape=(None,),
                                  dtype='text')
